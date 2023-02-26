@@ -1,0 +1,31 @@
+name: "builddeploycode"
+
+on:
+  push:
+    tags:
+      - "*"
+    branches:
+      - "*"
+  workflow_dispatch:
+
+env:
+# Set HOME for refrencing the GOPATH
+  HOME: ${{ github.workspace }}
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Start build deploy
+      uses: santoshkowshikhr/go-build-deploy@v1.0.4
+      with:
+        executable_name: go-executable
+        goos: linux
+        goarch: amd64
+        aws_region: ap-south-1
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        s3_bucket: gobuild
+        release_version: v1.1.1
+        push_to_s3: true
